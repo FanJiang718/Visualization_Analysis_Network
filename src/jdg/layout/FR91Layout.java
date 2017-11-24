@@ -107,7 +107,6 @@ public class FR91Layout extends Layout {
 	 * @return 'displacement' a 3d vector storing the displacement of vertex 'u'
 	 */	
 	private Vector_3 computeRepulsiveForce(Node u) {
-		
 		throw new Error("To be completed: question 1");
 	}
 	
