@@ -3,6 +3,8 @@ package jdg.layout;
 import jdg.graph.AdjacencyListGraph;
 import jdg.graph.Node;
 
+import java.util.ArrayList;
+
 import Jcg.geometry.Point_3;
 import Jcg.geometry.Vector_3;
 
@@ -83,13 +85,22 @@ public class FR91Layout extends Layout {
 		System.out.print("Performing iteration (FR91): "+this.iterationCount);
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
 
-		System.err.println("\nWarning: the class FR91Layout must be completed (question 1) ");
-		System.exit(0);
+		//System.err.println("\nWarning: the class FR91Layout must be completed (question 1) ");
+		//System.exit(0);
 
 		// first step: for each vertex compute the displacements due to attractive and repulsive forces
-		
+		Vector_3[] displacement_replusive = computeAllRepulsiveForces();
+		Vector_3[] displacement_attractive = computeAllAttractiveForces();
 		// second step: compute the total displacements and move all nodes to their new locations
-        
+		int count = 0;
+        for(Node u: g.vertices){
+        	Vector_3 displacement_tot = displacement_replusive[count].sum(displacement_attractive[count]);
+        	double norm = Math.sqrt(displacement_tot.squaredLength().doubleValue());
+        	u.p.translateOf(displacement_tot.multiplyByScalar(Math.min(temperature, norm)/norm));
+        	count++;
+        }
+		
+		
         this.cooling(); // update temperature
 		
 		// evaluate time performances
@@ -107,7 +118,17 @@ public class FR91Layout extends Layout {
 	 * @return 'displacement' a 3d vector storing the displacement of vertex 'u'
 	 */	
 	private Vector_3 computeRepulsiveForce(Node u) {
-		throw new Error("To be completed: question 1");
+		Vector_3 displacement = new Vector_3(0.,0.,0.);
+		Point_3[] Positions = g.getPositions();
+		double norm;
+		for(Point_3 v: Positions ){
+			Vector_3 delta = (Vector_3) u.p.minus(v);
+			norm = Math.sqrt(delta.squaredLength().doubleValue());
+			if(norm == 0.) continue;
+			displacement = displacement.sum(delta.multiplyByScalar(-C /norm*repulsiveForce(norm)));
+		}
+		return displacement;
+
 	}
 	
 	/**
@@ -116,7 +137,12 @@ public class FR91Layout extends Layout {
 	 * @return a vector v[]: v[i] stores the geometric displacement of the i-th node
 	 */	
 	private Vector_3[] computeAllRepulsiveForces() {
-		throw new Error("To be completed: question 1");
+		Vector_3[] displacements = new Vector_3[g.sizeVertices()];
+		int count = 0;
+		for(Node u: g.vertices){
+			displacements[count++] = computeRepulsiveForce(u);
+		}
+		return displacements;
 	}
 	
 	/**
@@ -126,7 +152,15 @@ public class FR91Layout extends Layout {
 	 * @return 'disp' a 3d vector storing the displacement of vertex 'u'
 	 */	
 	private Vector_3 computeAttractiveForce(Node u) {
-		throw new Error("To be completed: question 1");
+		Vector_3 displacement = new Vector_3(0.,0.,0.);
+		ArrayList<Node> neighbors = u.neighbors;
+		double norm;
+		for(Node v: neighbors){
+			Vector_3 delta = (Vector_3) u.p.minus(v.p);
+			norm = Math.sqrt(delta.squaredLength().doubleValue());
+			displacement = displacement.sum(delta.multiplyByScalar(attractiveForce(norm)/norm));
+		}
+		return displacement;
 	}
 	
 	/**
@@ -135,7 +169,12 @@ public class FR91Layout extends Layout {
 	 * @return a vector v[]: v[i] stores the geometric displacement of the i-th node
 	 */	
 	private Vector_3[] computeAllAttractiveForces() {
-		throw new Error("To be completed: question 1");
+		Vector_3[] displacements = new Vector_3[g.sizeVertices()];
+		int count = 0;
+		for(Node u: g.vertices){
+			displacements[count++] = computeAttractiveForce(u);
+		}
+		return displacements;
 	}
 	
 	/**
