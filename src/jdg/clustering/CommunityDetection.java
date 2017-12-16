@@ -1,5 +1,7 @@
 package jdg.clustering;
 
+import java.util.HashMap;
+
 import jdg.graph.AdjacencyListGraph;
 import jdg.graph.Node;
 
@@ -36,8 +38,31 @@ public abstract class CommunityDetection {
 	 * @return  the modularity of the partition
 	 */
 	public double computeModularity(AdjacencyListGraph graph, int[] communities) {
-		System.err.println("To be completed: question 3");
-		return -2.; // modularity is not defined (this method must be implemented)
+		int n = graph.sizeVertices();
+		int L = graph.sizeEdges();
+		HashMap<Integer,Integer> kc = new HashMap<Integer,Integer>();
+		HashMap<Integer,Integer> Lc = new HashMap<Integer,Integer>();
+		for(Node node: graph.vertices){
+			int i = node.index;
+			int k = communities[i];
+			if(kc.get(k) == null) kc.put(k, 0);
+			if(Lc.get(k) == null) Lc.put(k, 0);
+			kc.put(k, kc.get(k) + node.degree());
+			for(Node neighbour: node.neighborsList()){
+				if(k == communities[neighbour.index]){
+					Lc.put(k, Lc.get(k)+1);
+				}
+			}
+		}
+		double[] subModularities = new double[kc.size()];
+		double Modularity = 0;
+		for(int i =0; i< subModularities.length;i++){
+			// Lc is actually two times of real value, because we count two times the same inner edge
+			subModularities[i] = Lc.get(i)/2/L - kc.get(i)/2/L*kc.get(i)/2/L;
+			Modularity += subModularities[i];
+		}
+		
+		return Modularity; 
 	}
 
 	/**

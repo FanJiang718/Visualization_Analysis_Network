@@ -118,4 +118,13 @@ public class FastFR91Layout extends Layout {
 		return result;
 	}
 
+	public static void main(String args[]) {
+		Point_3 p = new Point_3(1,2,3);
+		Point_3 q = new Point_3(1,2,3);
+		Point_3[] ps = new Point_3[]{p,q};
+		Point_3 c = new Point_3();
+		System.out.println(c);
+		c.barycenter(ps);
+		System.out.println(c);
+	}
 }
