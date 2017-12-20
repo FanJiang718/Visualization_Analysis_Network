@@ -82,7 +82,7 @@ public class GreedyAlgorithm extends CommunityDetection {
 			int[] tmp = new int[2];
 			tmp[0] = k; tmp[1] = l;
 			configurations.put(count, tmp);
-			E[k][k] = E[k][k]+E[k][l]+E[l][l];
+			E[k][k] = E[k][k]+E[k][l]+E[l][l]+E[l][k]; // To be determined
 			E[k][l]=0;E[l][k] =0;E[l][l] =0;
 			for(int i = 0; i<n;i++){
 				E[k][i] = E[k][i] + E[i][l];
