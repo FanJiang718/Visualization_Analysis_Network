@@ -34,12 +34,12 @@ public class GreedyAlgorithm extends CommunityDetection {
 		int n=graph.sizeVertices();
 		int m = graph.sizeEdges();
 		double[] M = new double[n]; // modularities
-		int[] result=new int[n];
+		int[] result=new int[n]; 
 		int[] communities=new int[n];
-		 // recording community configuration at each step
 		HashMap<Integer,int[]> configurations = new HashMap<Integer,int[]>(); // recording the merge of clusters at each step
 		double[][] E = new double[n][n]; // corresponding to e_ij in the paper
-		double[] a = new double[n];
+		double[] a = new double[n]; // corrsponding to a_i in the paper
+		////////////////////initialization//////////////////////////////////////
 		for(Node node: graph.vertices){
 			int k = node.index;
 			for(Node neighbour: node.neighbors){
@@ -56,9 +56,11 @@ public class GreedyAlgorithm extends CommunityDetection {
 			communities[i] = i;
 			result[i] = i;
 		}
+		////////////////////end of initialization//////////////////////////////////////
+		////////////////////begin algorithm //////////////////////////////////////////
 		int count =1;
 		while(count <n){
-			double deltaQ = Double.NEGATIVE_INFINITY;
+			double deltaQ = Double.NEGATIVE_INFINITY; // record the maximum deltaQ for a step
 			int k =-1 ,l = -1;
 		
 			for(Node node: graph.vertices){
@@ -66,18 +68,22 @@ public class GreedyAlgorithm extends CommunityDetection {
 				for(Node neighbour: node.neighbors){
 					int index_nbr = neighbour.index;
 					if(find(communities,index) == find(communities,index_nbr)) continue;
+					// calculate deltaQ
 					double tmp = 2*(E[find(communities,index)][find(communities,index_nbr)] - a[find(communities,index)]*a[find(communities,index_nbr)]);
 					if(tmp > deltaQ){
 						deltaQ = tmp;
+						// convention: merge cluster l into cluster k
 						k = Math.min(find(communities,index),find(communities,index_nbr));
 						l = Math.max(find(communities,index),find(communities,index_nbr));
 					}
 				}
 			}
-			if(k==-1){
+			
+			if(k==-1){ // if there is not a merge, we should not continue do the following update
 				count++;
 				continue;
 			}
+			// update of modularity, E, a, communities, and record the merge
 			M[count] = M[count-1] + deltaQ;
 			int[] tmp = new int[2];
 			tmp[0] = k; tmp[1] = l;
@@ -95,7 +101,8 @@ public class GreedyAlgorithm extends CommunityDetection {
 			union(communities,k,l);
 			count++;
 		}
-		
+		////////////////////end algorithm //////////////////////////////////////////
+		// find the maximum M
 		double max_M = Double.NEGATIVE_INFINITY; int loc_maxM = -1;
 		for(int i=0;i < M.length;i++){
 			if(M[i] > max_M){
@@ -111,6 +118,7 @@ public class GreedyAlgorithm extends CommunityDetection {
 		for(int i=0; i<result.length;i++){
 			find(result,i);
 		}
+		// change the index of each cluster to [0,k-1] to meet the requirement
 		HashMap<Integer,Integer> change_communitry_number = new HashMap<Integer,Integer>();
 		int num_community=0;
 		for(int i=0; i<result.length;i++){
@@ -121,6 +129,7 @@ public class GreedyAlgorithm extends CommunityDetection {
 		return result;
 	}
 	
+	////////// implementation of union-find data structure////////////////////
 	public int find(int[] communities, int u){
 		if(communities[u] == u) return u;
 		else{

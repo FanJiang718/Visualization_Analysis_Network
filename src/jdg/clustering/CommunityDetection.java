@@ -58,10 +58,10 @@ public abstract class CommunityDetection {
 		double Modularity = 0;
 		for(int i =0; i< subModularities.length;i++){
 			// Lc is actually two times of real value, because we count two times the same inner edge
-			subModularities[i] = Lc.get(i)/2/L - kc.get(i)/2/L*kc.get(i)/2/L;
+			subModularities[i] = Lc.get(i)/2./L - kc.get(i)/2./L*kc.get(i)/2./L;
 			Modularity += subModularities[i];
 		}
-		System.out.println(subModularities.length);
+		//System.out.println(subModularities.length);
 		return Modularity; 
 	}
 

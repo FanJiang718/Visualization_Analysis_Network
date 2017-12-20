@@ -36,27 +36,25 @@ public class LouvainAlgorithm extends CommunityDetection {
 		int m = graph.sizeEdges();
 		int[] result=new int[n];
 		int[] communities=new int[n];
-		HashMap<Integer,ArrayList<int[]>> newGraph = new HashMap<Integer,ArrayList<int[]>>();
-		int[] sum_in = new int[n];
-		int[] sum_tot = new int[n];
+		HashMap<Integer,ArrayList<int[]>> newGraph = new HashMap<Integer,ArrayList<int[]>>(); // record the graph
+		int[] sum_tot = new int[n]; // corresponding to sum_tot in the paper
 		int[][] E = new int[n][n];
 		for(Node node: graph.vertices){
 			int k = node.index;
-			if(newGraph.get(k) ==null) newGraph.put(k, new ArrayList<int[]>());
+			if(newGraph.get(k) ==null) newGraph.put(k, new ArrayList<int[]>()); // create the graph
 			for(Node neighbour: node.neighborsList()){
 				newGraph.get(k).add(new int[]{neighbour.index,1});
 				E[k][neighbour.index] = 1;
 				E[neighbour.index][k] = 1;
 			}
-			sum_in[k] = 0;
 			sum_tot[k] =  node.degree();
 			communities[k] = k;
 			result[k] = k;
 		}
+		/////////////////////////end of initialization ///////////////////////////
 		
-		
-		boolean flag = true;
-		boolean change = false;
+		boolean flag = true; //control whether continue doing phase 1
+		boolean change = false; // detect if there is no further change we can do, control the end of algorithm
 		while(flag){
 			change = false;
 			while(flag){
@@ -67,7 +65,7 @@ public class LouvainAlgorithm extends CommunityDetection {
 					for(int[] neighbour: newGraph.get(node)){
 						int index_nbr = neighbour[0];
 						if(find(communities,node) == find(communities,index_nbr)) continue;
-						HashMap<Integer,Integer> connected_community = new HashMap<Integer,Integer>();
+						HashMap<Integer,Integer> connected_community = new HashMap<Integer,Integer>(); // record connected communities of the current node
 						connected_community.put(find(communities,node), 0);
 						connected_community.put(find(communities,index_nbr), 0);
 						int k_i = 0;
@@ -78,8 +76,9 @@ public class LouvainAlgorithm extends CommunityDetection {
 							else connected_community.put(find(communities,index),connected_community.get(find(communities,index))+1);
 							
 						}
-					
+						// deltaQ of putting an isolated node to a new cluster
 						double deltaQ =  connected_community.get(find(communities,index_nbr))/2.0/m - 2.0* k_i* sum_tot[find(communities,index_nbr)]/(2.0*m)/(2.0*m);
+						// deltaQ of taking out a node from its cluster
 						deltaQ += -connected_community.get(find(communities,node))/2.0/m - 2*k_i*(k_i-sum_tot[find(communities,node)])/(2.0*m)/(2.0*m);
 						
 						if(deltaQ > 0){
@@ -104,7 +103,8 @@ public class LouvainAlgorithm extends CommunityDetection {
 				}
 			}
 			
-			if(change == false) break;
+			if(change == false) break; // if no further change of modularity, stop the algorithm
+			// create a new graph
 			newGraph = new HashMap<Integer,ArrayList<int[]>>();
 			for(Node node: graph.vertices){
 				if(newGraph.get(find(communities,node.index)) == null) newGraph.put(find(communities,node.index), new ArrayList<int[]>());
@@ -124,7 +124,7 @@ public class LouvainAlgorithm extends CommunityDetection {
 			flag = true;
 		}
 
-		
+		// change the index of each cluster to [0,k-1] to meet the requirement
 		for(int i=0; i<communities.length;i++){
 			find(communities,i);
 		}
@@ -137,7 +137,7 @@ public class LouvainAlgorithm extends CommunityDetection {
 		
 		return communities;
 	}
-	
+	//////////implementation of union-find data structure////////////////////
 	public int find(int[] communities, int u){
 		if(communities[u] == u) return u;
 		else{
