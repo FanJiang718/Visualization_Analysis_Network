@@ -5,7 +5,7 @@ import Jcg.geometry.Point_3;
 import jdg.graph.Node;
 
 public class Octree {
-	public int max_tree_level =8;
+	public int max_tree_level =11;
 	public int current_level;
 	public ArrayList<Node> vertices;
 	public Octree[] children = new Octree[8];
