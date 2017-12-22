@@ -191,38 +191,6 @@ public class AdjacencyListGraph implements Graph {
     	return new Point_3[]{p, q};
     }
     
-    ////////
-    //computing the 3D bouding box
-    ////////
-    public Point_3[] compute3DBoundingBox() {
-    	double 	xmin=Double.MAX_VALUE, xmax=Double.MIN_VALUE, 
-    			ymin=Double.MAX_VALUE, ymax=Double.MIN_VALUE,
-    			zmin=Double.MAX_VALUE, zmax=Double.MIN_VALUE;
-    	
-    	double x, y,z;
-    	for(Node u: this.vertices) {
-    		x=u.getPoint().getX().doubleValue();
-    		y=u.getPoint().getY().doubleValue();
-    		z=u.getPoint().getY().doubleValue();
-    		if (x<xmin)
-    			xmin = x;
-    		if (x>xmax)
-    			xmax = x;
-    		if (y<ymin)
-    			ymin = y;
-    		if (y>ymax)
-    			ymax = y;
-    		if (z<zmin)
-    			zmin = z;
-    		if (z>zmax)
-    			zmax = z;
-    	}
-    	Point_3 p=new Point_3(xmin, ymin, zmin);
-    	Point_3 q=new Point_3(xmax, ymax, zmax);
-    	//System.out.println("\nBounding box: "+p+" - "+q);
-    	return new Point_3[]{p, q};
-    }
-    
     
     /**
      * Compute and return the connected component containing the vertex v

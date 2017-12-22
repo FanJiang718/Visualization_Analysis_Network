@@ -61,7 +61,7 @@ public abstract class CommunityDetection {
 			subModularities[i] = Lc.get(i)/2./L - kc.get(i)/2./L*kc.get(i)/2./L;
 			Modularity += subModularities[i];
 		}
-		//System.out.println(subModularities.length);
+		System.out.println(subModularities.length);
 		return Modularity; 
 	}
 
