@@ -118,7 +118,7 @@ public class FR91Layout extends Layout {
 	 * @return 'displacement' a 3d vector storing the displacement of vertex 'u'
 	 */	
 	private Vector_3 computeRepulsiveForce(Node u) {
-		Vector_3 displacement = new Vector_3(0.,0.,0.);
+		Vector_3 displacement = new Vector_3(0.,0.,0.); //to be incremented with the repulsive forces found
 		Point_3[] Positions = g.getPositions();
 		double norm;
 		for(Point_3 v: Positions ){
@@ -128,7 +128,6 @@ public class FR91Layout extends Layout {
 			displacement = displacement.sum(delta.multiplyByScalar(-C /norm*repulsiveForce(norm)));
 		}
 		return displacement;
-
 	}
 	
 	/**

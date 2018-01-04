@@ -75,7 +75,7 @@ public class FastFR91Layout extends Layout {
 	 */	
 	public double repulsiveForce(double distance) {
 		countRepulsive++;
-		return (k*k)/distance;
+		return (k*k)/(distance);
 	}
 
     ////////

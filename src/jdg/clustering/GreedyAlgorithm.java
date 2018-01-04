@@ -21,7 +21,7 @@ public class GreedyAlgorithm extends CommunityDetection {
 	
 	/**
 	 * This method returns a partition of a network of size 'n' into communities,
-	 * computed by the Louvain algorithm <p>
+	 * computed by the Greedy algorithm <p>
 	 * <p>
 	 * Remarks:<p>
 	 * -) the nodes of the networks are numbered 0..n-1
@@ -37,8 +37,8 @@ public class GreedyAlgorithm extends CommunityDetection {
 		int[] result=new int[n]; 
 		int[] communities=new int[n];
 		HashMap<Integer,int[]> configurations = new HashMap<Integer,int[]>(); // recording the merge of clusters at each step
-		double[][] E = new double[n][n]; // corresponding to e_ij in the paper
-		double[] a = new double[n]; // corrsponding to a_i in the paper
+		double[][] E = new double[n][n]; // corresponding to e_ij in the paper: the fraction of edges in group i connected to edges in group j
+		double[] a = new double[n]; // corrsponding to a_i in the paper: the total degree of nodes in group j
 		////////////////////initialization//////////////////////////////////////
 		for(Node node: graph.vertices){
 			int k = node.index;
