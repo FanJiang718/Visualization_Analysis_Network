@@ -87,7 +87,6 @@ public class FR91Layout extends Layout {
 
 		//System.err.println("\nWarning: the class FR91Layout must be completed (question 1) ");
 		//System.exit(0);
-
 		// first step: for each vertex compute the displacements due to attractive and repulsive forces
 		Vector_3[] displacement_replusive = computeAllRepulsiveForces();
 		Vector_3[] displacement_attractive = computeAllAttractiveForces();

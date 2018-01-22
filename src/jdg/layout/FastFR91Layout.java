@@ -164,7 +164,7 @@ public class FastFR91Layout extends Layout {
 	public void computeLayout() {
 		System.out.print("Performing iteration (fast FR91): "+this.iterationCount);
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
-		
+
 		// first step: for each vertex compute the displacements due to attractive and repulsive forces
 		Octree octree = new Octree(this.g.vertices,0,FastFR91Layout.compute3DBoundingBox(g.vertices));
 		Vector_3[] displacement_replusive = computeAllRepulsiveForces(octree);
